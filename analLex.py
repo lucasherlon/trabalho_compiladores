@@ -23,8 +23,8 @@ class Token:
         self.line = line
         self.column = column
 
-    def __repr__(self):
-        return f'({self.type}, {repr(self.value)}, {self.line}, {self.column})'
+    def token(self):
+        return (self.type, repr(self.value), self.line, self.column)
 
 # Lexer class
 class Lexer:
@@ -57,7 +57,7 @@ class Lexer:
                 self._update_position(value)
                 if type == 'WHITESPACE' or type == 'COMMENT':
                     return self._next_token()  # Skip whitespace and comments
-                return token
+                return token.token()
 
         # If no token is matched, raise an error
         raise SyntaxError(f'Unexpected token at line {self.line}, column {self.column}')
