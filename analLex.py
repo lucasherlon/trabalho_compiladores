@@ -24,7 +24,7 @@ class Token:
         self.column = column
 
     def token(self):
-        return (self.type, repr(self.value), self.line, self.column)
+        return (self.type, self.value, self.line, self.column)
 
 # Lexer class
 class Lexer:
