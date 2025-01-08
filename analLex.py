@@ -3,17 +3,28 @@ import sys
 
 # Token types
 TOKEN_TYPES = {
+    'PROGRAM':r'\b(Program)\b',
     'TYPE':r'\b(int|float|str|bool)\b',
     'KEYWORD': r'\b(program|const|int|float|str|bool|print|input|if|else|while|break)\b',
     'IDENTIFIER': r'[a-zA-Z_][a-zA-Z_0-9]*',
     'NUMBER': r'\b\d+(\.\d+)?\b',
     'STRING': r'".*?"',
-    'OPERATOR': r'[+\-*/=!><]=?|!',
+    'OP_SOMA': r'[+]=?|!',
+    'OP_SUBT': r'[\-]=?|!',
+    'OP_MULT': r'[*]=?|!',
+    'OP_IGUAL': r'[==]=?',
+    'OP_DIFERENTE': r'[!]=?',
+    'OP_MAIOR': r'[>]=?',
+    'OP_MENOR': r'[<]=?',
+    'OP_MAIOR_IGUAL': r'[>=]=?',
+    'OP_MENOR_IGUAL': r'[<=]=?',
     'DELIMITER': r'[;,{()}]',
     'WHITESPACE': r'[ \t]+',
     'NEWLINE': r'\n',
     'COMMENT': r'//.*'
 }
+
+operador = ('IDENTIFIER','OP_SOMA', 'OP_SUBT', 'OP_MULT', 'OP_DIV', 'OP_IGUAL', 'OP_DIFERENTE', 'OP_MAIOR', 'OP_MENOR', 'OP_MAIOR_IGUAL', 'OP_MENOR_IGUAL')
 
 # Token class
 class Token:
@@ -24,7 +35,7 @@ class Token:
         self.column = column
 
     def token(self):
-        return (self.type, self.value, self.line, self.column)
+        return ( repr(self.value),self.type)
 
 # Lexer class
 class Lexer:
@@ -76,7 +87,10 @@ def main(filename):
     lexer = Lexer(code)
     tokens = lexer.tokenize()
     for token in tokens:
-        print(token)
+        if token[1] in operador:
+            print(f"<{token[0]}, {token[1]}>")
+        else:
+            print(f"<{token[0]}>")
 
 
 if __name__ == "__main__":
