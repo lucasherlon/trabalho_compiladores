@@ -9,7 +9,7 @@ TOKEN_TYPES = {
     'INPUT': r'\b(input)\b',
     'OUTPUT': r'\b(print)\b',
     'KEYWORD': r'\b(const|break)\b',
-    'IDENTIFIER': r'[a-zA-Z_][a-zA-Z_0-9]*',
+    'IDENTIFIER': r'[a-zA-Z][a-zA-Z_0-9]*',
     'NUMBER_INT': r'\b\d+\b',
     'NUMBER_FLOAT': r'\b\d+\.\d+\b',
     'STRING': r'"[^"]*"',  # Expressão regular melhorada para strings
@@ -45,7 +45,7 @@ operador = (
     'OP_MAIOR_IGUAL', 'OP_MENOR_IGUAL', 'PROGRAM', 'OP_ATRIB',
     'PAREN_ESQ', 'PAREN_DIR', 'CHAVE_ESQ', 'CHAVE_DIR',
     'COLCH_ESQ', 'COLCH_DIR', 'PONTO_VIRGULA', 'VIRGULA', 'PONTO',
-    'TYPE', 'NUMBER_INT', 'NUMBER_FLOAT', 'STRING'  # Adicionado STRING aos operadores
+    'TYPE', 'NUMBER_INT', 'NUMBER_FLOAT', 'STRING', 'NEWLINE'  # Adicionado STRING aos operadores
 )
 
 class Token:
