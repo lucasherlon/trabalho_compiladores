@@ -1,0 +1,7 @@
+Program Test1 {
+    int a, b, soma;
+    a = 10;
+    b = 20;
+    soma = a + b;
+    print("Soma: ", soma);
+}
