@@ -4,7 +4,7 @@ import sys
 TOKEN_TYPES = {
     'PROGRAM': r'\b(Program)\b',
     'TYPE': r'\b(int|float|str|bool)\b',
-    'CONDICAO': r'\b(if|else|while)\b',
+    'CONTROLE': r'\b(if|else|while)\b',
     'INPUT': r'\b(input)\b',
     'OUTPUT': r'\b(print)\b',
     'KEYWORD': r'\b(const|break)\b',
@@ -37,7 +37,7 @@ TOKEN_TYPES = {
 }
 
 operador = (
-    'INPUT', 'OUTPUT', 'CONDICAO', 'IDENTIFIER', 
+    'INPUT', 'OUTPUT', 'CONTROLE', 'IDENTIFIER', 
     'OP_SOMA', 'OP_SUBT', 'OP_MULT', 'OP_DIV', 
     'OP_IGUAL', 'OP_DIFERENTE', 'OP_MAIOR', 'OP_MENOR', 
     'OP_MAIOR_IGUAL', 'OP_MENOR_IGUAL', 'PROGRAM', 'OP_ATRIB',
