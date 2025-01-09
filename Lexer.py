@@ -38,14 +38,14 @@ TOKEN_TYPES = {
     'COMMENT': r'//.*'
 }
 
-operador = (
+showed_types = (
     'INPUT', 'OUTPUT', 'CONDITIONAL', 'LOOP', 'IDENTIFIER', 
     'OP_SOMA', 'OP_SUBT', 'OP_MULT', 'OP_DIV', 
     'OP_IGUAL', 'OP_DIFERENTE', 'OP_MAIOR', 'OP_MENOR', 
     'OP_MAIOR_IGUAL', 'OP_MENOR_IGUAL', 'PROGRAM', 'OP_ATRIB',
     'PAREN_ESQ', 'PAREN_DIR', 'CHAVE_ESQ', 'CHAVE_DIR',
-    'COLCH_ESQ', 'COLCH_DIR', 'PONTO_VIRGULA', 'VIRGULA', 'PONTO',
-    'TYPE', 'NUMBER_INT', 'NUMBER_FLOAT', 'STRING', 'NEWLINE'  
+    'COLCH_ESQ', 'COLCH_DIR', 'PONTO',
+    'TYPE', 'NUMBER_INT', 'NUMBER_FLOAT', 'STRING'
 )
 
 class Token:
@@ -110,7 +110,7 @@ def main(filename):
     tokens = lexer.tokenize()
     
     for token in tokens:
-        if token[1] in operador:
+        if token[1] in showed_types:
             print(f"<{token[0]}, {token[1]}>")
         else:
             print(f"<{token[0]}>")
