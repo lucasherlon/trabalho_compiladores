@@ -5,7 +5,10 @@ import sys
 TOKEN_TYPES = {
     'PROGRAM':r'\b(Program)\b',
     'TYPE':r'\b(int|float|str|bool)\b',
-    'KEYWORD': r'\b(program|const|int|float|str|bool|print|input|if|else|while|break)\b',
+    'CONDICAO': r'\b(if|else|while)\b',
+    'INPUT': r'\b(input)\b',
+    'OUTPUT': r'\b(print)\b',
+    'KEYWORD': r'\b(const|break)\b',
     'IDENTIFIER': r'[a-zA-Z_][a-zA-Z_0-9]*',
     'NUMBER': r'\b\d+(\.\d+)?\b',
     'STRING': r'".*?"',
@@ -24,7 +27,7 @@ TOKEN_TYPES = {
     'COMMENT': r'//.*'
 }
 
-operador = ('IDENTIFIER','OP_SOMA', 'OP_SUBT', 'OP_MULT', 'OP_DIV', 'OP_IGUAL', 'OP_DIFERENTE', 'OP_MAIOR', 'OP_MENOR', 'OP_MAIOR_IGUAL', 'OP_MENOR_IGUAL','PROGRAM')
+operador = ('INPUT','OUTPUT','CONDICAO','IDENTIFIER','OP_SOMA', 'OP_SUBT', 'OP_MULT', 'OP_DIV', 'OP_IGUAL', 'OP_DIFERENTE', 'OP_MAIOR', 'OP_MENOR', 'OP_MAIOR_IGUAL', 'OP_MENOR_IGUAL','PROGRAM')
 
 
 class Token:
@@ -65,7 +68,7 @@ class Lexer:
                 token = Token(type, value, self.line, self.column)
                 self._update_position(value)
                 if type == 'WHITESPACE' or type == 'COMMENT':
-                    return self._next_token()  
+                    return self._next_token()
                 return token.token()
 
         raise SyntaxError(f'Unexpected token at line {self.line}, column {self.column}')
