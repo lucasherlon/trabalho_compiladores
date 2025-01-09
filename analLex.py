@@ -42,7 +42,8 @@ operador = (
     'OP_IGUAL', 'OP_DIFERENTE', 'OP_MAIOR', 'OP_MENOR', 
     'OP_MAIOR_IGUAL', 'OP_MENOR_IGUAL', 'PROGRAM', 'OP_ATRIB',
     'PAREN_ESQ', 'PAREN_DIR', 'CHAVE_ESQ', 'CHAVE_DIR',
-    'COLCH_ESQ', 'COLCH_DIR', 'PONTO_VIRGULA', 'VIRGULA', 'PONTO'
+    'COLCH_ESQ', 'COLCH_DIR', 'PONTO_VIRGULA', 'VIRGULA', 'PONTO',
+    'TYPE'  # Adicionado TYPE aos operadores
 )
 
 class Token:
