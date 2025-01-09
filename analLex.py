@@ -8,7 +8,8 @@ TOKEN_TYPES = {
     'CONDICAO': r'\b(if|else|while)\b',
     'INPUT': r'\b(input)\b',
     'OUTPUT': r'\b(print)\b',
-    'KEYWORD': r'\b(const|break)\b',
+    'CONST': r'\b(const)\b',
+    'BREAK': r'\b(break)\b',
     'IDENTIFIER': r'[a-zA-Z_][a-zA-Z_0-9]*',
     'NUMBER': r'\b\d+(\.\d+)?\b',
     'STRING': r'".*?"',
@@ -27,7 +28,7 @@ TOKEN_TYPES = {
     'COMMENT': r'//.*'
 }
 
-operador = ('INPUT','OUTPUT','CONDICAO','IDENTIFIER','OP_SOMA', 'OP_SUBT', 'OP_MULT', 'OP_DIV', 'OP_IGUAL', 'OP_DIFERENTE', 'OP_MAIOR', 'OP_MENOR', 'OP_MAIOR_IGUAL', 'OP_MENOR_IGUAL','PROGRAM')
+operador = ('CONST','BREAK','TYPE','INPUT','OUTPUT','CONDICAO','IDENTIFIER','OP_SOMA', 'OP_SUBT', 'OP_MULT', 'OP_DIV', 'OP_IGUAL', 'OP_DIFERENTE', 'OP_MAIOR', 'OP_MENOR', 'OP_MAIOR_IGUAL', 'OP_MENOR_IGUAL','PROGRAM')
 
 
 class Token:
