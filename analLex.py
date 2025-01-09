@@ -5,7 +5,7 @@ import sys
 TOKEN_TYPES = {
     'PROGRAM':r'\b(Program)\b',
     'TYPE':r'\b(int|float|str|bool)\b',
-    'CONDICAO': r'\b(if|else|while)\b',
+    'CONDITION': r'\b(if|else|while)\b',
     'INPUT': r'\b(input)\b',
     'OUTPUT': r'\b(print)\b',
     'CONST': r'\b(const)\b',
@@ -16,20 +16,19 @@ TOKEN_TYPES = {
     'OP_SOMA': r'[+]=?|!',
     'OP_SUBT': r'[\-]=?|!',
     'OP_MULT': r'[*]=?|!',
-    'OP_IGUAL': r'[==]=?',
-    'OP_DIFERENTE': r'[!]=?',
-    'OP_MAIOR': r'[>]=?',
-    'OP_MENOR': r'[<]=?',
-    'OP_MAIOR_IGUAL': r'[>=]=?',
-    'OP_MENOR_IGUAL': r'[<=]=?',
+    'OP_EQUAL': r'[==]=?',
+    'OP_DIFF': r'[!]=?',
+    'OP_BIGGER': r'[>]=?',
+    'OP_MINOR': r'[<]=?',
+    'OP_BIGGER_EQUAL': r'[>=]=?',
+    'OP_MINOR_EQUAL': r'[<=]=?',
     'DELIMITER': r'[;,{()}]',
     'WHITESPACE': r'[ \t]+',
     'NEWLINE': r'\n',
     'COMMENT': r'//.*'
 }
 
-operador = ('CONST','BREAK','TYPE','INPUT','OUTPUT','CONDICAO','IDENTIFIER','OP_SOMA', 'OP_SUBT', 'OP_MULT', 'OP_DIV', 'OP_IGUAL', 'OP_DIFERENTE', 'OP_MAIOR', 'OP_MENOR', 'OP_MAIOR_IGUAL', 'OP_MENOR_IGUAL','PROGRAM')
-
+non_operador = ('DELIMITER','NEWLINE','STRING')
 
 class Token:
     def __init__(self, type, value, line, column):
@@ -88,7 +87,7 @@ def main(filename):
     lexer = Lexer(code)
     tokens = lexer.tokenize()
     for token in tokens:
-        if token[1] in operador:
+        if token[1] not in non_operador:
             print(f"<{token[0]}, {token[1]}>")
         else:
             print(f"<{token[0]}>")
