@@ -1,7 +1,7 @@
 import re
 import sys
 
-# Token types
+
 TOKEN_TYPES = {
     'PROGRAM':r'\b(Program)\b',
     'TYPE':r'\b(int|float|str|bool)\b',
@@ -26,7 +26,7 @@ TOKEN_TYPES = {
 
 operador = ('IDENTIFIER','OP_SOMA', 'OP_SUBT', 'OP_MULT', 'OP_DIV', 'OP_IGUAL', 'OP_DIFERENTE', 'OP_MAIOR', 'OP_MENOR', 'OP_MAIOR_IGUAL', 'OP_MENOR_IGUAL','PROGRAM')
 
-# Token class
+
 class Token:
     def __init__(self, type, value, line, column):
         self.type = type
@@ -37,7 +37,7 @@ class Token:
     def token(self):
         return ( repr(self.value),self.type)
 
-# Lexer class
+
 class Lexer:
     def __init__(self, code):
         self.code = code
@@ -54,11 +54,9 @@ class Lexer:
         return tokens
 
     def _next_token(self):
-        # Check for end of code
         if self.position >= len(self.code):
             return None
 
-        # Try to match each token type
         for type, pattern in TOKEN_TYPES.items():
             regex = re.compile(pattern)
             match = regex.match(self.code, self.position)
@@ -67,10 +65,9 @@ class Lexer:
                 token = Token(type, value, self.line, self.column)
                 self._update_position(value)
                 if type == 'WHITESPACE' or type == 'COMMENT':
-                    return self._next_token()  # Skip whitespace and comments
+                    return self._next_token()  
                 return token.token()
 
-        # If no token is matched, raise an error
         raise SyntaxError(f'Unexpected token at line {self.line}, column {self.column}')
 
     def _update_position(self, value):
