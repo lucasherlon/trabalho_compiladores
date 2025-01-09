@@ -4,13 +4,15 @@ import sys
 TOKEN_TYPES = {
     'PROGRAM': r'\b(Program)\b',
     'TYPE': r'\b(int|float|str|bool)\b',
-    'CONTROLE': r'\b(if|else|while)\b',
+    'CONDITIONAL': r'\b(if|else)\b',
+    'LOOP': r'\b(while)\b',
     'INPUT': r'\b(input)\b',
     'OUTPUT': r'\b(print)\b',
     'KEYWORD': r'\b(const|break)\b',
     'IDENTIFIER': r'[a-zA-Z_][a-zA-Z_0-9]*',
-    'NUMBER': r'\b\d+(\.\d+)?\b',
-    'STRING': r'".*?"',
+    'NUMBER_INT': r'\b\d+\b',
+    'NUMBER_FLOAT': r'\b\d+\.\d+\b',
+    'STRING': r'"[^"]*"',  # Expressão regular melhorada para strings
     'OP_SOMA': r'\+',
     'OP_SUBT': r'-',
     'OP_MULT': r'\*',
@@ -37,13 +39,13 @@ TOKEN_TYPES = {
 }
 
 operador = (
-    'INPUT', 'OUTPUT', 'CONTROLE', 'IDENTIFIER', 
+    'INPUT', 'OUTPUT', 'CONDITIONAL', 'LOOP', 'IDENTIFIER', 
     'OP_SOMA', 'OP_SUBT', 'OP_MULT', 'OP_DIV', 
     'OP_IGUAL', 'OP_DIFERENTE', 'OP_MAIOR', 'OP_MENOR', 
     'OP_MAIOR_IGUAL', 'OP_MENOR_IGUAL', 'PROGRAM', 'OP_ATRIB',
     'PAREN_ESQ', 'PAREN_DIR', 'CHAVE_ESQ', 'CHAVE_DIR',
     'COLCH_ESQ', 'COLCH_DIR', 'PONTO_VIRGULA', 'VIRGULA', 'PONTO',
-    'TYPE'  # Adicionado TYPE aos operadores
+    'TYPE', 'NUMBER_INT', 'NUMBER_FLOAT', 'STRING'  # Adicionado STRING aos operadores
 )
 
 class Token:
@@ -75,7 +77,6 @@ class Lexer:
         if self.position >= len(self.code):
             return None
 
-        # Tenta encontrar o próximo token
         for type, pattern in TOKEN_TYPES.items():
             regex = re.compile(pattern)
             match = regex.match(self.code, self.position)
@@ -90,7 +91,6 @@ class Lexer:
                     
                 return token.token()
                 
-        # Se chegou aqui, encontrou um caractere inválido
         invalid_char = self.code[self.position]
         raise SyntaxError(f'Caractere inválido "{invalid_char}" na linha {self.line}, coluna {self.column}')
 
