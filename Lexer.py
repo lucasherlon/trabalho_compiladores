@@ -12,7 +12,7 @@ TOKEN_TYPES = {
     'IDENTIFIER': r'[a-zA-Z][a-zA-Z_0-9]*',
     'NUMBER_INT': r'\b\d+\b',
     'NUMBER_FLOAT': r'\b\d+\.\d+\b',
-    'STRING': r'"[^"]*"',  
+    'STRING': r'"[^"]*"',
     'OP_SOMA': r'\+',
     'OP_SUBT': r'-',
     'OP_MULT': r'\*',
@@ -39,14 +39,15 @@ TOKEN_TYPES = {
 }
 
 showed_types = (
-    'INPUT', 'OUTPUT', 'CONDITIONAL', 'LOOP', 'IDENTIFIER', 
-    'OP_SOMA', 'OP_SUBT', 'OP_MULT', 'OP_DIV', 
-    'OP_IGUAL', 'OP_DIFERENTE', 'OP_MAIOR', 'OP_MENOR', 
+    'INPUT', 'OUTPUT', 'CONDITIONAL', 'LOOP', 'IDENTIFIER',
+    'OP_SOMA', 'OP_SUBT', 'OP_MULT', 'OP_DIV',
+    'OP_IGUAL', 'OP_DIFERENTE', 'OP_MAIOR', 'OP_MENOR',
     'OP_MAIOR_IGUAL', 'OP_MENOR_IGUAL', 'PROGRAM', 'OP_ATRIB',
     'PAREN_ESQ', 'PAREN_DIR', 'CHAVE_ESQ', 'CHAVE_DIR',
     'COLCH_ESQ', 'COLCH_DIR', 'PONTO',
     'TYPE', 'NUMBER_INT', 'NUMBER_FLOAT', 'STRING'
 )
+
 
 class Token:
     def __init__(self, type, value, line, column):
@@ -54,9 +55,10 @@ class Token:
         self.value = value
         self.line = line
         self.column = column
-    
+
     def token(self):
-        return (repr(self.value), self.type)
+        return (self.type, self.value)
+
 
 class Lexer:
     def __init__(self, code):
@@ -80,17 +82,17 @@ class Lexer:
         for type, pattern in TOKEN_TYPES.items():
             regex = re.compile(pattern)
             match = regex.match(self.code, self.position)
-            
+
             if match:
                 value = match.group(0)
-                token = Token(type, value, self.line, self.column)
+                token = Token(type, value.replace("\"", ""), self.line, self.column)
                 self._update_position(value)
-                
+
                 if type == 'WHITESPACE' or type == 'COMMENT':
                     return self._next_token()
-                    
+
                 return token.token()
-                
+
         invalid_char = self.code[self.position]
         raise SyntaxError(f'Caractere inválido "{invalid_char}" na linha {self.line}, coluna {self.column}')
 
@@ -102,18 +104,20 @@ class Lexer:
         else:
             self.column += len(value)
 
+
 def main(filename):
     with open(filename, 'r') as file:
         code = file.read()
-    
+
     lexer = Lexer(code)
     tokens = lexer.tokenize()
-    
+
     for token in tokens:
-        if token[1] in showed_types:
+        if token[0] in showed_types:
             print(f"<{token[0]}, {token[1]}>")
         else:
             print(f"<{token[0]}>")
+
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:

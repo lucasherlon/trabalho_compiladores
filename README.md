@@ -3,7 +3,7 @@ Trabalho final da disciplina de compiladores
 
 /*Para exceutar:
 No terminal, execute o seguinte comando:
-    python analLex.py [nome do arquivo de entrada].txt
+    python analLex.py [nome do arquivo de entrada]
 
 Logo será imprimido os tokens do codigo de entrada
 

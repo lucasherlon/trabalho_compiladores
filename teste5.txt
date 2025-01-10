@@ -1,9 +1,12 @@
-Program Test5 {
-    int num;
-    num = 10;
-    if (num > 5) {
-        print("Maior que 5");
-    else {  // Falta de fechamento correto do if
-        print("Menor ou igual a 5");
+Program Maior_Menor {
+    float a, b;
+    input(a, b);
+    if (a > b){
+        print("Maior: ", a);
+    }else{
+    If( a < b){
+        print("Maior: ", b);
+    }else{
+        print("Iguais!");
     }
-}
+ }
