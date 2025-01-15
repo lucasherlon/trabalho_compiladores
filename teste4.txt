@@ -1,0 +1,9 @@
+Program Test4 {
+    const PI = 3.14;
+    const greeting = "Hello, LPMS!";
+    bool isTrue;
+    isTrue = true;
+    print(greeting);
+    print("PI: ", PI);
+    print("Verdadeiro? ", isTrue);
+}

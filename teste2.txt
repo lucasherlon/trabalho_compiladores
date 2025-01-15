@@ -1,0 +1,9 @@
+Program Test2 {
+    float x, y;
+    input(x, y);
+    if (x > y) {
+        print("Maior: ", x);
+    } else {
+        print("Maior: ", y);
+    }
+}
