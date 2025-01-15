@@ -6,5 +6,6 @@ Program Test3 {
         total = total + count;
         count = count - 1;
     }
-    print("Total: ", total);
+    print("Total: ");
+    print(total);
 }
