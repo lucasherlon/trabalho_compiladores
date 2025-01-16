@@ -122,7 +122,10 @@ def p_expression(p):
         right_type = p[3][1]
         if left_type != right_type:
             raise Exception(f"Erro de tipo: Operação entre {left_type} e {right_type} não permitida")
-        p[0] = (p[2], left_type)
+        if p[2] in ['==', '!=', '>', '<', '>=', '<=']:
+            p[0] = (p[2], 'bool')
+        else:
+            p[0] = (p[2], left_type)
 
 def p_if_statement(p):
     "if_statement : IF LPAREN expression RPAREN LBRACE statements RBRACE else_statement"
