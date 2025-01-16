@@ -4,7 +4,7 @@ Program Fatorial {
         input(fat);
         while( fat > 1 ){
         print (res);
-        print(res - 1)
+        print(res - 1);
         res = res * (fat - 1);
         }
         print("Resultado final:", res);

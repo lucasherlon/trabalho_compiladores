@@ -84,12 +84,15 @@ def p_expression(p):
                    | expression GREATER expression
                    | expression LESS expression
                    | expression GREATER_EQUAL expression
-                   | expression LESS_EQUAL expression"""
-    if len(p) == 2:
+                   | expression LESS_EQUAL expression
+                   | LPAREN expression RPAREN"""  # Nova regra para expressões entre parênteses
+    if len(p) == 2:  # Literal ou identificador
         if isinstance(p[1], str) and p[1] in symbol_table:
             check_declaration(p[1])
         p[0] = p[1]
-    else:
+    elif len(p) == 4 and p[1] == '(':  # Expressão entre parênteses
+        p[0] = p[2]
+    else:  # Operações binárias
         p[0] = (p[2], p[1], p[3])
 
 def p_if_statement(p):
@@ -109,14 +112,12 @@ def p_while_statement(p):
     p[0] = ("while", p[3], p[6])
 
 def p_print_statement(p):
-    "print_statement : PRINT LPAREN expression RPAREN SEMICOLON"
+    "print_statement : PRINT LPAREN argument_list RPAREN SEMICOLON"
     p[0] = ("print", p[3])
 
 def p_input_statement(p):
-    "input_statement : INPUT LPAREN IDENTIFIER COMMA IDENTIFIER RPAREN SEMICOLON"
-    check_declaration(p[3])
-    check_declaration(p[5])
-    p[0] = ("input", p[3], p[5])
+    """input_statement : INPUT LPAREN argument_list RPAREN SEMICOLON"""
+    p[0] = ("input", p[3])
 
 def p_function_call(p):
     """function_call : IDENTIFIER LPAREN argument_list RPAREN SEMICOLON"""
