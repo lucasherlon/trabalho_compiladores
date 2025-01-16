@@ -128,9 +128,14 @@ def p_print_statement(p):
         p[0] = ("print", p[3], p[5])
 
 def p_input_statement(p):
-    "input_statement : INPUT LPAREN IDENTIFIER RPAREN SEMICOLON"
+    """input_statement : INPUT LPAREN IDENTIFIER RPAREN SEMICOLON
+                       | INPUT LPAREN IDENTIFIER COMMA IDENTIFIER RPAREN SEMICOLON"""
     check_declaration(p[3])
-    p[0] = ("input", p[3])
+    if len(p) == 8:
+        check_declaration(p[5])
+        p[0] = ("input", p[3], p[5])
+    else:
+        p[0] = ("input", p[3])
 
 def p_function_call(p):
     """function_call : IDENTIFIER LPAREN argument_list RPAREN SEMICOLON"""
