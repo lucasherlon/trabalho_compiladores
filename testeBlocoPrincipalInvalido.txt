@@ -1,0 +1,4 @@
+Program {
+    int a;
+    a = 10;
+}

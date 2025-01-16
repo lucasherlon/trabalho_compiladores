@@ -8,7 +8,7 @@ symbol_table = {}
 def add_symbol(identifier, var_type):
     if identifier in symbol_table:
         raise Exception(f"Erro: Variável '{identifier}' já declarada")
-    symbol_table[identifier] = {"type": var_type}
+    symbol_table[identifier] = {"type": var_type, "initialized": False}
 
 def check_declaration(identifier):
     if identifier not in symbol_table and identifier not in reserved:
@@ -18,6 +18,14 @@ def get_type(identifier):
     if identifier in symbol_table:
         return symbol_table[identifier]["type"]
     raise Exception(f"Erro: Identificador '{identifier}' não declarado")
+
+def check_initialization(identifier):
+    if identifier in symbol_table and not symbol_table[identifier]["initialized"]:
+        raise Exception(f"Erro: Variável '{identifier}' não inicializada")
+
+def set_initialized(identifier):
+    if identifier in symbol_table:
+        symbol_table[identifier]["initialized"] = True
 
 # Regras do analisador sintático
 def p_program(p):
@@ -38,6 +46,7 @@ def p_declaration(p):
                    | CONST IDENTIFIER ASSIGN expression SEMICOLON"""
     if p[1] == 'const':
         add_symbol(p[2], 'const')
+        set_initialized(p[2])
         p[0] = ("const_declaration", p[2], p[4])
     else:
         add_symbol(p[2], p[1])
@@ -83,6 +92,7 @@ def p_assignment(p):
     expr_type = p[3][1]
     if var_type != expr_type:
         raise Exception(f"Erro de tipo: Não é possível atribuir {expr_type} a {var_type}")
+    set_initialized(p[1])
     p[0] = ("assign", p[1], p[3])
 
 def p_expression(p):
@@ -106,6 +116,7 @@ def p_expression(p):
     if len(p) == 2:
         if isinstance(p[1], str) and p[1] in symbol_table:
             check_declaration(p[1])
+            check_initialization(p[1])
             p[0] = (p[1], get_type(p[1]))
         elif isinstance(p[1], int):
             p[0] = (p[1], 'int')
@@ -159,8 +170,10 @@ def p_input_statement(p):
     """input_statement : INPUT LPAREN IDENTIFIER RPAREN SEMICOLON
                        | INPUT LPAREN IDENTIFIER COMMA IDENTIFIER RPAREN SEMICOLON"""
     check_declaration(p[3])
+    set_initialized(p[3])
     if len(p) == 8:
         check_declaration(p[5])
+        set_initialized(p[5])
         p[0] = ("input", p[3], p[5])
     else:
         p[0] = ("input", p[3])
@@ -206,6 +219,7 @@ def main():
             print("Análise concluída com sucesso:", result)
     except Exception as e:
         print("Erro:", str(e))
+        raise
 
 if __name__ == "__main__":
     main()

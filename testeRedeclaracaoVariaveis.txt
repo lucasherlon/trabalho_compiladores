@@ -1,0 +1,4 @@
+Program Teste {
+    int a;
+    float a;
+}
