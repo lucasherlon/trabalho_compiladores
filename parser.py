@@ -29,17 +29,23 @@ def p_declarations(p):
 
 def p_declaration(p):
     """declaration : type IDENTIFIER SEMICOLON
-                   | type IDENTIFIER COMMA identifiers SEMICOLON"""
-    add_symbol(p[2], p[1])
-    if len(p) > 4:  # Suporte a múltiplas variáveis
-        for identifier in p[4]:
-            add_symbol(identifier, p[1])
-    p[0] = ("declaration", p[1], [p[2]] + (p[4] if len(p) > 4 else []))
+                   | type IDENTIFIER COMMA identifiers SEMICOLON
+                   | CONST IDENTIFIER ASSIGN expression SEMICOLON"""
+    if p[1] == 'const':
+        add_symbol(p[2], 'const')
+        p[0] = ("const_declaration", p[2], p[4])
+    else:
+        add_symbol(p[2], p[1])
+        if len(p) > 4:  # Suporte a múltiplas variáveis
+            for identifier in p[4]:
+                add_symbol(identifier, p[1])
+        p[0] = ("declaration", p[1], [p[2]] + (p[4] if len(p) > 4 else []))
 
 def p_type(p):
     """type : INT
             | FLOAT
-            | STR"""
+            | STR
+            | BOOL"""
     p[0] = p[1]
 
 def p_identifiers(p):
@@ -75,6 +81,8 @@ def p_expression(p):
                    | FLOAT_LITERAL
                    | STRING_LITERAL
                    | IDENTIFIER
+                   | TRUE
+                   | FALSE
                    | expression PLUS expression
                    | expression MINUS expression
                    | expression MULTIPLY expression
@@ -84,15 +92,12 @@ def p_expression(p):
                    | expression GREATER expression
                    | expression LESS expression
                    | expression GREATER_EQUAL expression
-                   | expression LESS_EQUAL expression
-                   | LPAREN expression RPAREN"""  # Nova regra para expressões entre parênteses
-    if len(p) == 2:  # Literal ou identificador
+                   | expression LESS_EQUAL expression"""
+    if len(p) == 2:
         if isinstance(p[1], str) and p[1] in symbol_table:
             check_declaration(p[1])
         p[0] = p[1]
-    elif len(p) == 4 and p[1] == '(':  # Expressão entre parênteses
-        p[0] = p[2]
-    else:  # Operações binárias
+    else:
         p[0] = (p[2], p[1], p[3])
 
 def p_if_statement(p):
@@ -112,12 +117,14 @@ def p_while_statement(p):
     p[0] = ("while", p[3], p[6])
 
 def p_print_statement(p):
-    "print_statement : PRINT LPAREN argument_list RPAREN SEMICOLON"
+    "print_statement : PRINT LPAREN expression RPAREN SEMICOLON"
     p[0] = ("print", p[3])
 
 def p_input_statement(p):
-    """input_statement : INPUT LPAREN argument_list RPAREN SEMICOLON"""
-    p[0] = ("input", p[3])
+    "input_statement : INPUT LPAREN IDENTIFIER COMMA IDENTIFIER RPAREN SEMICOLON"
+    check_declaration(p[3])
+    check_declaration(p[5])
+    p[0] = ("input", p[3], p[5])
 
 def p_function_call(p):
     """function_call : IDENTIFIER LPAREN argument_list RPAREN SEMICOLON"""

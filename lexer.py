@@ -8,6 +8,7 @@ reserved = {
     'int': 'INT',
     'float': 'FLOAT',
     'str': 'STR',
+    'bool': 'BOOL',
     'if': 'IF',
     'else': 'ELSE',
     'while': 'WHILE',
@@ -24,7 +25,6 @@ tokens = [
     'GREATER_EQUAL', 'LESS_EQUAL', 'GREATER', 'LESS', 'NOT',
     'LBRACE', 'RBRACE', 'LPAREN', 'RPAREN', 'SEMICOLON', 'COMMA', 'ASSIGN'
 ] + list(reserved.values())
-
 
 # Regras de expressões regulares para tokens simples
 t_LBRACE = r'\{'
@@ -47,9 +47,9 @@ t_LESS = r'<'
 t_NOT = r'!'
 
 # Regras para tokens mais complexos
-def t_IDENTIFIER(t):
-    r'[a-zA-Z_][a-zA-Z0-9_]*'
-    t.type = reserved.get(t.value, 'IDENTIFIER')  # Verifica se é uma palavra reservada
+def t_FLOAT_LITERAL(t):
+    r'\d+\.\d+'
+    t.value = float(t.value)
     return t
 
 def t_INTEGER_LITERAL(t):
@@ -57,14 +57,14 @@ def t_INTEGER_LITERAL(t):
     t.value = int(t.value)
     return t
 
-def t_FLOAT_LITERAL(t):
-    r'\d+\.\d+'
-    t.value = float(t.value)
-    return t
-
 def t_STRING_LITERAL(t):
     r'"([^\\"]|\\.)*"'
     t.value = t.value[1:-1]  # Remove aspas
+    return t
+
+def t_IDENTIFIER(t):
+    r'[a-zA-Z_][a-zA-Z0-9_]*'
+    t.type = reserved.get(t.value, 'IDENTIFIER')  # Verifica se é uma palavra reservada
     return t
 
 # Ignorar espaços e tabulações

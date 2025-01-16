@@ -2,8 +2,10 @@ Program Test2 {
     float x, y;
     input(x, y);
     if (x > y) {
-        print("Maior: ", x);
+        print("Maior: ");
+        print(x);
     } else {
-        print("Maior: ", y);
+        print("Maior: ");
+        print(y);
     }
 }

@@ -4,6 +4,8 @@ Program Test4 {
     bool isTrue;
     isTrue = true;
     print(greeting);
-    print("PI: ", PI);
-    print("Verdadeiro? ", isTrue);
+    print("PI: ");
+    print(PI);
+    print("Verdadeiro? ");
+    print(isTrue);
 }
