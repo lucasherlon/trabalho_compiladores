@@ -114,30 +114,54 @@ def p_expression(p):
                    | expression GREATER_EQUAL expression
                    | expression LESS_EQUAL expression"""
     if len(p) == 2:
-        if isinstance(p[1], str) and p[1] in symbol_table:
-            check_declaration(p[1])
-            check_initialization(p[1])
-            p[0] = (p[1], get_type(p[1]))
-        elif isinstance(p[1], int):
-            p[0] = (p[1], 'int')
-        elif isinstance(p[1], float):
-            p[0] = (p[1], 'float')
-        elif p[1] in ['true', 'false']:
-            p[0] = (p[1], 'bool')
+        if isinstance(p[1], str):
+            if p[1] in symbol_table:
+                check_declaration(p[1])
+                check_initialization(p[1])
+                p[0] = (p[1], get_type(p[1]))
+            elif p[1] in ['true', 'false']:
+                p[0] = (p[1], 'bool')
+            elif (p[1].startswith('"') and p[1].endswith('"')) or \
+                 (p[1].startswith("'") and p[1].endswith("'")):  # String literal
+                p[0] = (p[1], 'str')
+            else:
+                try:
+                    float(p[1])
+                    if '.' in p[1]:
+                        p[0] = (float(p[1]), 'float')
+                    else:
+                        p[0] = (int(p[1]), 'int')
+                except ValueError:
+                    if p[1].isidentifier():  # Verificar se é um identificador válido
+                        check_declaration(p[1])
+                        check_initialization(p[1])
+                        p[0] = (p[1], get_type(p[1]))
+                    else:
+                        p[0] = (p[1], 'str')  # Assume que é uma string se nada mais funcionar
+        elif isinstance(p[1], (int, float)):
+            p[0] = (p[1], 'int' if isinstance(p[1], int) else 'float')
+    elif len(p) == 4:
+        if p[1] == '(':  # Caso de parênteses
+            p[0] = p[2]
         else:
-            p[0] = (p[1], 'str')
-    elif len(p) == 3:
-        p[0] = p[2]
-    else:
-        left_type = p[1][1]
-        right_type = p[3][1]
-        if left_type != right_type:
-            raise Exception(f"Erro de tipo: Operação entre {left_type} e {right_type} não permitida")
-        if p[2] in ['==', '!=', '>', '<', '>=', '<=']:
-            p[0] = (p[2], 'bool')
-        else:
-            p[0] = (p[2], left_type)
-
+            # Garantir que p[1] e p[3] são tuplas com valor e tipo
+            left = p[1] if isinstance(p[1], tuple) else (p[1], 'unknown')
+            right = p[3] if isinstance(p[3], tuple) else (p[3], 'unknown')
+            
+            left_type = left[1]
+            right_type = right[1]
+            
+            # Permitir concatenação de strings
+            if p[2] == '+' and ('str' in [left_type, right_type]):
+                p[0] = ((left[0], p[2], right[0]), 'str')
+            elif left_type != right_type and not (left_type in ['int', 'float'] and right_type in ['int', 'float']):
+                raise Exception(f"Erro de tipo: Operação entre {left_type} e {right_type} não permitida")
+            elif p[2] in ['==', '!=', '>', '<', '>=', '<=']:
+                p[0] = ((left[0], p[2], right[0]), 'bool')
+            else:
+                result_type = 'float' if 'float' in [left_type, right_type] else left_type
+                p[0] = ((left[0], p[2], right[0]), result_type)
+                
 def p_if_statement(p):
     "if_statement : IF LPAREN expression RPAREN LBRACE statements RBRACE else_statement"
     if p[3][1] != 'bool':

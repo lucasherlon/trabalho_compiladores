@@ -7,6 +7,6 @@ Program Fatorial {
         print(res - 1);
         res = res * (fat - 1);
         }
-        print("Result");
+        print("Resultado final: ", res);
         print(res);
     }
