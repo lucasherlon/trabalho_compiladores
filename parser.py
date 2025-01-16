@@ -1,5 +1,5 @@
 import ply.yacc as yacc
-from lexer import tokens, lexer
+from lexer import tokens, lexer, reserved
 import sys
 
 # Tabela de símbolos
@@ -12,7 +12,12 @@ def add_symbol(identifier, var_type):
 
 def check_declaration(identifier):
     if identifier not in symbol_table and identifier not in reserved:
-        raise Exception(f"Erro: Identificador '{identifier}' não declarado ou não é uma função válida")
+        raise Exception(f"Erro: Identificador '{identifier}' não declarado")
+
+def get_type(identifier):
+    if identifier in symbol_table:
+        return symbol_table[identifier]["type"]
+    raise Exception(f"Erro: Identificador '{identifier}' não declarado")
 
 # Regras do analisador sintático
 def p_program(p):
@@ -74,6 +79,10 @@ def p_statement(p):
 def p_assignment(p):
     "assignment : IDENTIFIER ASSIGN expression SEMICOLON"
     check_declaration(p[1])
+    var_type = get_type(p[1])
+    expr_type = p[3][1]
+    if var_type != expr_type:
+        raise Exception(f"Erro de tipo: Não é possível atribuir {expr_type} a {var_type}")
     p[0] = ("assign", p[1], p[3])
 
 def p_expression(p):
@@ -97,14 +106,28 @@ def p_expression(p):
     if len(p) == 2:
         if isinstance(p[1], str) and p[1] in symbol_table:
             check_declaration(p[1])
-        p[0] = p[1]
+            p[0] = (p[1], get_type(p[1]))
+        elif isinstance(p[1], int):
+            p[0] = (p[1], 'int')
+        elif isinstance(p[1], float):
+            p[0] = (p[1], 'float')
+        elif p[1] in ['true', 'false']:
+            p[0] = (p[1], 'bool')
+        else:
+            p[0] = (p[1], 'str')
     elif len(p) == 3:
         p[0] = p[2]
     else:
-        p[0] = (p[2], p[1], p[3])
+        left_type = p[1][1]
+        right_type = p[3][1]
+        if left_type != right_type:
+            raise Exception(f"Erro de tipo: Operação entre {left_type} e {right_type} não permitida")
+        p[0] = (p[2], left_type)
 
 def p_if_statement(p):
     "if_statement : IF LPAREN expression RPAREN LBRACE statements RBRACE else_statement"
+    if p[3][1] != 'bool':
+        raise Exception("Erro de tipo: A expressão da condição do if deve ser do tipo bool")
     p[0] = ("if", p[3], p[6], p[8])
 
 def p_else_statement(p):
@@ -117,6 +140,8 @@ def p_else_statement(p):
 
 def p_while_statement(p):
     "while_statement : WHILE LPAREN expression RPAREN LBRACE statements RBRACE"
+    if p[3][1] != 'bool':
+        raise Exception("Erro de tipo: A expressão da condição do while deve ser do tipo bool")
     p[0] = ("while", p[3], p[6])
 
 def p_print_statement(p):

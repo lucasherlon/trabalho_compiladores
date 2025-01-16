@@ -1,0 +1,4 @@
+Program Teste {
+    const PI = 3.14;
+    PI = 2.15;
+}

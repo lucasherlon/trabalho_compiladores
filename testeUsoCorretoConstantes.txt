@@ -1,0 +1,7 @@
+Program Teste {
+    const PI = 3.14;
+    float area;
+    area = PI * 10 * 10;
+    print("Área: ");
+    print(area);
+}
