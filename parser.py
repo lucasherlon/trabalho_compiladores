@@ -83,6 +83,7 @@ def p_expression(p):
                    | IDENTIFIER
                    | TRUE
                    | FALSE
+                   | LPAREN expression RPAREN
                    | expression PLUS expression
                    | expression MINUS expression
                    | expression MULTIPLY expression
@@ -97,6 +98,8 @@ def p_expression(p):
         if isinstance(p[1], str) and p[1] in symbol_table:
             check_declaration(p[1])
         p[0] = p[1]
+    elif len(p) == 3:
+        p[0] = p[2]
     else:
         p[0] = (p[2], p[1], p[3])
 
@@ -117,14 +120,17 @@ def p_while_statement(p):
     p[0] = ("while", p[3], p[6])
 
 def p_print_statement(p):
-    "print_statement : PRINT LPAREN expression RPAREN SEMICOLON"
-    p[0] = ("print", p[3])
+    """print_statement : PRINT LPAREN expression RPAREN SEMICOLON
+                       | PRINT LPAREN expression COMMA expression RPAREN SEMICOLON"""
+    if len(p) == 6:
+        p[0] = ("print", p[3])
+    else:
+        p[0] = ("print", p[3], p[5])
 
 def p_input_statement(p):
-    "input_statement : INPUT LPAREN IDENTIFIER COMMA IDENTIFIER RPAREN SEMICOLON"
+    "input_statement : INPUT LPAREN IDENTIFIER RPAREN SEMICOLON"
     check_declaration(p[3])
-    check_declaration(p[5])
-    p[0] = ("input", p[3], p[5])
+    p[0] = ("input", p[3])
 
 def p_function_call(p):
     """function_call : IDENTIFIER LPAREN argument_list RPAREN SEMICOLON"""
